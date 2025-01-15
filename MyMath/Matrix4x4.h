@@ -14,6 +14,8 @@ struct Matrix4x4 final{
 	// 逆行列
 	static Matrix4x4 Inverse(const Matrix4x4& m);
 
+	static Matrix4x4 MakeRotateAxisAngle(const Vector3& axis, float angle);
+
 	static Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth){
 
 		Matrix4x4 matrix = {};
