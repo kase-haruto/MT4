@@ -29,6 +29,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
+	Vector3 axis = Vector3(1.0f, 1.0f, 1.0f).Normalize();
+	float angle = 0.44f;
+	Matrix4x4 rotMat = Matrix4x4::MakeRotateAxisAngle(axis, angle);
+
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0){
 		// フレームの開始
@@ -38,6 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		memcpy(preKeys, keys, 256);
 		Novice::GetHitKeyStateAll(keys);
 
+		MatrixScreenPrintf(20, 20, rotMat, "rotateMat");
 
 		// フレームの終了
 		Novice::EndFrame();
