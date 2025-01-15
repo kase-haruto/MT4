@@ -19,6 +19,7 @@ void MatrixScreenPrintf(int x, int y, const Matrix4x4& mat, const std::string& l
 		}
 	}
 }
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 
