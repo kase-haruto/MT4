@@ -1,6 +1,7 @@
 #include "Matrix4x4.h"
 
 #include "Vector3.h"
+#include "function.h"
 
 /* lib */
 #include<cmath>
@@ -261,4 +262,29 @@ Matrix4x4 Matrix4x4::MakeRotateAxisAngle(const Vector3& axis, float angle){
 	result.m[3][3] = 1.0f;
 
 	return result;
+}
+
+Matrix4x4 Matrix4x4::DirectionToDirection(const Vector3& from, const Vector3& to){
+	Vector3 fromNorm = Normalize(from);
+	Vector3 toNorm = Normalize(to);
+
+	float dot = Dot(fromNorm, toNorm);
+
+	if (std::fabs(dot - 1.0f) < 1e-6f){
+		return Matrix4x4::MakeIdentity();
+	}
+
+	if (std::fabs(dot + 1.0f) < 1e-6f){
+		Vector3 axis = Vector3(1.0f, 0.0f, 0.0f);
+		if (std::fabs(fromNorm.x) > 0.9f){
+			axis = Vector3(0.0f, 1.0f, 0.0f);
+		}
+		axis = Normalize(Cross(fromNorm, axis)); // 修正済みの外積を利用
+		return Matrix4x4::MakeRotateAxisAngle(axis, static_cast< float >(std::numbers::pi));
+	}
+
+	Vector3 axis = Normalize(Cross(fromNorm, toNorm)); // 修正済みの外積を利用
+	float angle = std::acos(dot);
+
+	return Matrix4x4::MakeRotateAxisAngle(axis, angle);
 }

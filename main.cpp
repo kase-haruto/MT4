@@ -1,7 +1,8 @@
 #include <Novice.h>
 
-#include "MyMath/Vector3.h"
+#include "MyMath/function.h"
 #include "MyMath/Matrix4x4.h"
+#include "MyMath/Vector3.h"
 
 #include <string>
 
@@ -11,7 +12,7 @@ static const int kRowHeight = 20;
 static const int kColumnWidth = 60;
 
 void MatrixScreenPrintf(int x, int y, const Matrix4x4& mat, const std::string& label){
-	Novice::ScreenPrintf(x - 20, y - 20, "%s", label.c_str());
+	Novice::ScreenPrintf(x, y - 20, "%s", label.c_str());
 
 	for (int row = 0; row < 4; ++row){
 		for (int col = 0; col < 4; ++col){
@@ -30,9 +31,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 	char keys[256] = {0};
 	char preKeys[256] = {0};
 
-	Vector3 axis = Vector3(1.0f, 1.0f, 1.0f).Normalize();
-	float angle = 0.44f;
-	Matrix4x4 rotMat = Matrix4x4::MakeRotateAxisAngle(axis, angle);
+	// ベクトルの初期化
+	Vector3 from0 = Normalize(Vector3 {1.0f, 0.7f, 0.5f});
+	Vector3 to0 = Vector3 {-from0.x,-from0.y,-from0.z};
+
+	Vector3 from1 = Normalize(Vector3 {-0.6f, 0.9f, 0.2f});
+	Vector3 to1 = Normalize(Vector3 {0.4f, 0.7f, -0.5f});
+
+	// 回転行列の計算
+	Matrix4x4 rotateMatrix0 = Matrix4x4::DirectionToDirection(Normalize(Vector3 {1.0f, 0.0f, 0.0f}), Normalize(Vector3 {-1.0f, 0.0f, 0.0f}));
+	Matrix4x4 rotateMatrix1 = Matrix4x4::DirectionToDirection(from0, to0);
+	Matrix4x4 rotateMatrix2 = Matrix4x4::DirectionToDirection(from1, to1);
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0){
@@ -43,7 +52,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int){
 		memcpy(preKeys, keys, 256);
 		Novice::GetHitKeyStateAll(keys);
 
-		MatrixScreenPrintf(20, 20, rotMat, "rotateMat");
+		// 行列の表示
+		MatrixScreenPrintf(0, 0, rotateMatrix0, "rotateMatrix0");
+		MatrixScreenPrintf(0, kRowHeight * 5, rotateMatrix1, "rotateMatrix1");
+		MatrixScreenPrintf(0, kRowHeight * 10, rotateMatrix2, "rotateMatrix2");
+
 
 		// フレームの終了
 		Novice::EndFrame();

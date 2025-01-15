@@ -63,6 +63,11 @@ struct Vector3 final{
     Vector3 operator-=(const Vector3& other);
     friend Vector3 operator-(float scalar, const Vector3& v);
 
+    // 符号反転演算子のオーバーロード
+    Vector3 operator-() const{
+        return Vector3(-x, -y, -z);
+    }
+
 
     static Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 };
